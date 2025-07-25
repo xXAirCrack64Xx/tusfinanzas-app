@@ -12,7 +12,7 @@ public class CustomTestProfile implements QuarkusTestProfile {
                 "quarkus.datasource.db-kind", "h2",
                 "quarkus.datasource.jdbc.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
                 "quarkus.datasource.username", "sa",
-                "quarkus.datasource.password", "sa",
+                "quarkus.datasource.password", "",
                 "quarkus.hibernate-orm.database.generation", "drop-and-create",
                 // Desactiva JWT real
                 "quarkus.smallrye-jwt.enabled", "false",
