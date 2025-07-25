@@ -115,7 +115,8 @@ class GastoControllerTest {
         gasto.setUsuario(usuario);
 
         when(userService.findByUsername("testUser")).thenReturn(usuario);
-        when(gastoService.getGastosByFilters(eq(usuario), any(), any(), any())).thenReturn(List.of(gasto));
+        when(gastoService.getGastosByFilters(eq(usuario), any(), any(), any()))
+                .thenReturn(List.of(gasto));
 
         given()
                 .queryParam("tipo", "ALIMENTACION")
@@ -127,4 +128,5 @@ class GastoControllerTest {
                 .body("[0].tipo", is("ALIMENTACION"));
     }
 }
+
 

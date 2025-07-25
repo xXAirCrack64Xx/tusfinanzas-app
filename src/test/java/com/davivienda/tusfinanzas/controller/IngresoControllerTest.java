@@ -11,6 +11,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.TestProfile;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -24,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @QuarkusTest
-@TestProfile(CustomTestProfile.class)
+@TestProfile(CustomTestProfile.class)  // <-- usa el perfil H2 para tests
 public class IngresoControllerTest {
 
     @InjectMock
@@ -33,13 +34,19 @@ public class IngresoControllerTest {
     @InjectMock
     UserService userService;
 
+    private User mockUser;
+
+    @BeforeEach
+    void setup() {
+        mockUser = new User();
+        mockUser.setId(1L);
+        mockUser.setUsername("testuser");
+        Mockito.when(userService.findByUsername("testuser")).thenReturn(mockUser);
+    }
+
     @Test
     @TestSecurity(user = "testuser", roles = {"USER"})
     public void testCreateIngreso() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("testuser");
-
         Ingreso mockIngreso = new Ingreso();
         mockIngreso.setId(10L);
         mockIngreso.setMonto(500.0);
@@ -48,7 +55,6 @@ public class IngresoControllerTest {
         mockIngreso.setTipo("SALARIO");
         mockIngreso.setUsuario(mockUser);
 
-        Mockito.when(userService.findByUsername("testuser")).thenReturn(mockUser);
         Mockito.when(ingresoService.createIngreso(any(IngresoDTO.class), eq(mockUser)))
                 .thenReturn(mockIngreso);
 
@@ -61,7 +67,8 @@ public class IngresoControllerTest {
         given()
                 .contentType(ContentType.JSON)
                 .body(request)
-                .when().post("/ingresos")
+                .when()
+                .post("/ingresos")
                 .then()
                 .statusCode(201)
                 .body("descripcion", equalTo("Salario"));
@@ -70,10 +77,6 @@ public class IngresoControllerTest {
     @Test
     @TestSecurity(user = "testuser", roles = {"USER"})
     public void testGetIngresos() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("testuser");
-
         Ingreso ingreso = new Ingreso();
         ingreso.setId(1L);
         ingreso.setDescripcion("Salario");
@@ -82,12 +85,12 @@ public class IngresoControllerTest {
         ingreso.setTipo("SALARIO");
         ingreso.setUsuario(mockUser);
 
-        Mockito.when(userService.findByUsername("testuser")).thenReturn(mockUser);
         Mockito.when(ingresoService.getIngresosByUser(mockUser))
                 .thenReturn(Collections.singletonList(ingreso));
 
         given()
-                .when().get("/ingresos")
+                .when()
+                .get("/ingresos")
                 .then()
                 .statusCode(200)
                 .body("[0].descripcion", equalTo("Salario"));
@@ -96,14 +99,9 @@ public class IngresoControllerTest {
     @Test
     @TestSecurity(user = "testuser", roles = {"USER"})
     public void testDeleteIngreso() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("testuser");
-
-        Mockito.when(userService.findByUsername("testuser")).thenReturn(mockUser);
-
         given()
-                .when().delete("/ingresos/1")
+                .when()
+                .delete("/ingresos/1")
                 .then()
                 .statusCode(204);
     }
@@ -111,10 +109,6 @@ public class IngresoControllerTest {
     @Test
     @TestSecurity(user = "testuser", roles = {"USER"})
     public void testFiltrarIngresos() {
-        User mockUser = new User();
-        mockUser.setId(1L);
-        mockUser.setUsername("testuser");
-
         Ingreso ingreso = new Ingreso();
         ingreso.setId(1L);
         ingreso.setDescripcion("Bono");
@@ -123,7 +117,6 @@ public class IngresoControllerTest {
         ingreso.setTipo("BONO");
         ingreso.setUsuario(mockUser);
 
-        Mockito.when(userService.findByUsername("testuser")).thenReturn(mockUser);
         Mockito.when(ingresoService.getIngresosByFilters(eq(mockUser), any(), any(), any()))
                 .thenReturn(List.of(ingreso));
 
@@ -131,7 +124,8 @@ public class IngresoControllerTest {
                 .queryParam("fechaInicio", "2025-07-01")
                 .queryParam("fechaFin", "2025-07-31")
                 .queryParam("tipo", "BONO")
-                .when().get("/ingresos/filtrar")
+                .when()
+                .get("/ingresos/filtrar")
                 .then()
                 .statusCode(200)
                 .body("[0].descripcion", equalTo("Bono"));
