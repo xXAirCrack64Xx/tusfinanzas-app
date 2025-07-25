@@ -24,7 +24,6 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @QuarkusTest
-@TestProfile(CustomTestProfile.class)
 @Disabled("Se deshabilita mientras no haya DB configurada en CI")
 class GastoControllerTest {
 

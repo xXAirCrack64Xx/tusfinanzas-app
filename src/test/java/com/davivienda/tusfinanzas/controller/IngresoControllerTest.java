@@ -26,8 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @QuarkusTest
-@TestProfile(CustomTestProfile.class)
-@Disabled("Se deshabilita mientras no haya DB configurada en CI")// <-- usa el perfil H2 para tests
+@Disabled("Se deshabilita mientras no haya DB configurada en CI")
 public class IngresoControllerTest {
 
     @InjectMock
