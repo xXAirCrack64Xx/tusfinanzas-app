@@ -1,5 +1,6 @@
 package com.davivienda.tusfinanzas.controller;
 
+import com.davivienda.tusfinanzas.CustomTestProfile;
 import com.davivienda.tusfinanzas.dto.IngresoDTO;
 import com.davivienda.tusfinanzas.entity.Ingreso;
 import com.davivienda.tusfinanzas.entity.User;
@@ -7,6 +8,7 @@ import com.davivienda.tusfinanzas.service.IngresoService;
 import com.davivienda.tusfinanzas.service.UserService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.TestProfile;
 import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
@@ -22,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
 @QuarkusTest
+@TestProfile(CustomTestProfile.class)
 public class IngresoControllerTest {
 
     @InjectMock

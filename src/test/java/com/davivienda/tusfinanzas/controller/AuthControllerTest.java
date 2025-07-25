@@ -17,7 +17,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
 @QuarkusTest
-@TestProfile(CustomTestProfile.class)    // <–– usa el perfil renombrado
+@TestProfile(CustomTestProfile.class)
 class AuthControllerTest {
 
     @InjectMock
